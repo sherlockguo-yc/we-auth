@@ -37,4 +37,19 @@ describe('密码哈希', () => {
   it('burnTime 恒返回 false（用户不存在时消耗等量时间）', () => {
     expect(burnTime('anything')).toBe(false);
   });
+
+  it('burnTime 的耗时与真实校验同量级（差异 < 30%）', () => {
+    // 这条断言是用来抓「陪跑哈希写成无效字符串、bcrypt 直接返回」这类回归的
+    const hash = hashPassword('benchmark-password');
+
+    const t0 = Date.now();
+    verifyPassword('benchmark-password', hash);
+    const real = Date.now() - t0 || 1;
+
+    const t1 = Date.now();
+    burnTime('benchmark-password');
+    const burn = Date.now() - t1 || 1;
+
+    expect(Math.abs(burn - real) / real).toBeLessThan(0.3);
+  });
 });

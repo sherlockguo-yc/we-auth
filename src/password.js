@@ -14,10 +14,15 @@ const BCRYPT_COST = 12;
 
 /**
  * 用户不存在时仍要跑一次 bcrypt，且耗时与真实校验相当。
- * 否则「用户不存在」会比「密码错误」返回得更快，可被用来枚举用户名。
- * 沿用 WeMusic 已验证的写法。
+ *
+ * **必须是一个格式合法、cost 相同的真实哈希。** 手搓一个形似 bcrypt 的假字符串
+ * 看似无害，实际 bcrypt 解析失败会立刻返回 false —— 耗时接近 0，于是
+ * 「用户不存在」比「密码错误」快上百倍，反而把这个函数本该修补的漏洞做得更明显。
+ *
+ * 这个坑最初来自「沿用 WeMusic 已验证的写法」，而那段写法本身就是无效的
+ * （同一个假字符串）。2026-10-14 被耗时断言抓到并修正。
  */
-const DUMMY_HASH = '$2a$12$invalidhashforlengthpadding000000000000000000000000000000';
+const DUMMY_HASH = bcrypt.hashSync('we-auth-dummy-password-for-timing', BCRYPT_COST);
 
 function hashPassword(plain) {
   return bcrypt.hashSync(String(plain), BCRYPT_COST);
