@@ -1,0 +1,40 @@
+{
+  "name": "we-auth",
+  "version": "0.1.0",
+  "description": "We 系列项目的共享身份库：用户库唯一权威 + bcrypt 校验 + JWT 签发验签。这是一个库，不是服务。",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./schema": "./src/schema.js"
+  },
+  "files": [
+    "src",
+    "scripts",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "migrate": "node scripts/migrate.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "peerDependencies": {
+    "better-sqlite3": "^11.0.0 || ^12.0.0"
+  },
+  "devDependencies": {
+    "better-sqlite3": "^12.0.0",
+    "vitest": "^4.1.9"
+  },
+  "license": "MIT",
+  "private": true,
+  "allowScripts": {
+    "better-sqlite3": true
+  }
+}
